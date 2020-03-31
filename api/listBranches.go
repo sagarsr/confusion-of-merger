@@ -4,6 +4,7 @@ import (
 	"bankapp/models"
 	"bankapp/utils"
 	"net/http"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -32,15 +33,38 @@ var ViewBranchList = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 
 	}
 	cityName := cityNameList[0]
-	limit := 10
-	offset := 10
+	limitlist, queryErr := r.URL.Query()["limit"]
+	var limit int64
+	var err error
+	if !queryErr {
+		limit = 10
+	} else {
+		s := limitlist[0]
+		limit, err = strconv.ParseInt(s, 10, 32)
+		if err != nil || limit <= 0 {
+			utils.RespondWithError(w, http.StatusBadRequest, "Invalid offset value")
+			return
+		}
+	}
+
+	offsetlist, queryErr := r.URL.Query()["offset"]
+	var offset int64
+	if !queryErr {
+		offset = 0
+	} else {
+		s := offsetlist[0]
+		offset, err = strconv.ParseInt(s, 10, 32)
+		if err != nil || offset <= 0 {
+			utils.RespondWithError(w, http.StatusBadRequest, "Invalid offset value")
+			return
+		}
+	}
 	switch r.Method {
 	case "GET":
 		log.Info(bankName, cityName, limit, offset)
 		listofbranches := ListOfBranches{}
-		branchlist, count, err := branchList.FetchBranches(utils.Connection, bankName, cityName, limit, offset)
+		branchlist, count, err := branchList.FetchBranches(utils.Connection, bankName, cityName, int(limit), int(offset))
 
-		log.Info(branchlist)
 		if err != nil {
 			utils.RespondWithError(w, http.StatusInternalServerError, "Something went wrong")
 			return
@@ -54,4 +78,5 @@ var ViewBranchList = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 		w.Write([]byte(`{"message": "not found"}`))
 
 	}
+
 })
