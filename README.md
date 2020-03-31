@@ -32,6 +32,7 @@ TOKEN=$(curl GET -H "Accept:application/json" confusionofmerger.herokuapp.com/ge
 ```
   **_Note:_** JWT token is always attached in the auth header of each request. Refer to short.sql file to verify the data obtained is proper.  
 
+ ### GET API to fetch a bank details, given branch IFSC code
  ```
 curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" 'confusionofmerger.herokuapp.com/banklist?ifsc=ZSBL0000341'
  ```
@@ -50,6 +51,8 @@ Response                                        302 Found
     "state": "UTTAR PRADESH"
 }
 ```
+### GET API to fetch all details of branches, given bank name and a city with limit , offset pagination.
+
  ```
 curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" 'confusionofmerger.herokuapp.com/branchlist?bank_name=ABHYUDAYA COOPERATIVE BANK LIMITED&city=MUMBAI&limit=3&offset=6'
  ```
