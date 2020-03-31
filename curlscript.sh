@@ -1,0 +1,3 @@
+TOKEN=$(curl GET -H "Accept:application/json" confusionofmerger.herokuapp.com/get-token)
+curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" 'confusionofmerger.herokuapp.com/banklist?ifsc=ZSBL0000341' -o IFSCofBank
+curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" 'confusionofmerger.herokuapp.com/branchlist?bank_name=ABHYUDAYA%20COOPERATIVE%20BANK%20LIMITED&city=MUMBAI&limit=3&offset=6' -o ListOfBranches
