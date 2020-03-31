@@ -25,7 +25,7 @@ var ViewListBanks = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	case "GET":
 		err := branch.FetchBankDetailsWithIFSC(utils.Connection, ifsc[0])
 		if err != nil {
-			utils.RespondWithError(w, http.StatusInternalServerError, "Something went wrong")
+			utils.RespondWithError(w, http.StatusNotFound, "Sorry ! Unable to find data")
 			return
 		}
 		utils.RespondWithJSON(w, http.StatusFound, branch)
