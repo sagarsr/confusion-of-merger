@@ -5,7 +5,6 @@ import (
 	"bankapp/app"
 	"bankapp/utils"
 	"context"
-	"fmt"
 
 	"net/http"
 	"os"
@@ -25,14 +24,14 @@ func main() {
 	log.Info("Running on port " + port)
 	Connection, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
-		fmt.Print("error!")
+		log.Error("error connecting to database!")
 	}
 	utils.SetConnection(Connection)
 	defer Connection.Close(context.Background())
 	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/get-token", app.GetTokenHandler).Methods("GET")
-	router.Handle("/banklist", app.JwtMiddleware.Handler(api.ViewListBanks)).Methods("GET")
-	router.Handle("/branchlist", app.JwtMiddleware.Handler(api.ViewBranchList)).Methods("GET")
+	router.Handle("/banklist", app.ModJWTHandler(api.ViewListBanks)).Methods("GET")
+	router.Handle("/branchlist", app.ModJWTHandler(api.ViewBranchList)).Methods("GET")
 
 	//FrontEnd API Validation
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})

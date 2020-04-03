@@ -4,7 +4,6 @@ import (
 	"bankapp/models"
 	"bankapp/utils"
 	"net/http"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -29,9 +28,5 @@ var ViewListBanks = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 			return
 		}
 		utils.RespondWithJSON(w, http.StatusFound, branch)
-	default:
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(`{"message": "not found"}`))
-
 	}
 })
